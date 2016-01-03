@@ -1,6 +1,4 @@
-sPiRobot
+Raspberry Pi Robot
 ========
 
-Raspberry Pi base surveillance robot
-
-You can find step by step tutorial on this robot at : http://sohilpatel.org/spirobot/
+Implementation of Surveillance Robot using Raspberry Pi & Python
