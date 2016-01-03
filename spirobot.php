@@ -1,7 +1,6 @@
 <?php
 session_start();
 include "control.html";
-
 $action = $_GET['GO'];
 $key = "";
 
