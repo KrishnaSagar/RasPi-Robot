@@ -1,38 +1,181 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Raspberry Pi Surveillance Robot</title>
-</head>
-<body>
-
-<div style="width: 1000px;">
-	<div style="float: left; width: 700px; height: 500px;">
-		<iframe frameborder="0" width="320" height="240" src="http://10.0.0.3:8081/?action=stream"></iframe>
-	</div>
-	<div id="controls" style="float:left;">
-		<a href="spirobot.php?GO=ON">Connect to Engine</a><br/>
-		<a href="spirobot.php?GO=OFF">Disconnect from Engine</a><br/>
-		<img src="help_steuerkreuz.png" usemap="#controls" />
-		<br />
-		<a href="spirobot.php?GO=SLOWER">Slower</a><br/>
-		<a href="spirobot.php?GO=FASTER">Faster</a><br/>
-		<a href="spirobot.php?GO=CAM_ON">Activate Camera</a><br/>
-	</div>
-</div>
-<div class="clear: both;">&nbsp;</div>
-
-<map name="controls">
-	<area shape="rect" coords="30,1,120,60"
-				href="spirobot.php?GO=FORWARD" alt="Forward" title="Forward">
-	<area shape="rect" coords="1,60,70,120"
-				href="spirobot.php?GO=LEFT" alt="Left" title="Left">
-	<area shape="rect" coords="30,130,120,180"
-				href="spirobot.php?GO=BACKWARD" alt="Backward" title="Backward">
-	<area shape="rect" coords="140,60,180,120"
-				href="spirobot.php?GO=RIGHT" alt="Right" title="Right">
-	<area shape="rect" coords="80,60,120,120"
-				href="spirobot.php?GO=RELEASE" alt="Stop" title="Stop">
-</map>
-
-</body>
-</html>
+<html> <head> <meta http-equiv="Content-Type" content="text/html; 
+charset=UTF-8"> <title>SURBot - Raspberry Pi Surveillance Robot</title> 
+<style> .btn {
+  position: relative;
+  display: block;
+  margin: 30px auto;
+  padding: 0;
+  overflow: hidden;
+  border-width: 0;
+  outline: none;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+  
+  background-color: #2ecc71;
+  color: #ecf0f1;
+  
+  transition: background-color .3s;
+}
+.btn:hover, .btn:focus {
+  background-color: #27ae60;
+}
+.btn > * {
+  position: relative;
+}
+.btn span {
+  display: block;
+  padding: 12px 24px;
+}
+.btn:before {
+  content: "";
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  
+  display: block;
+  width: 0;
+  padding-top: 0;
+    
+  border-radius: 100%;
+  
+  background-color: rgba(236, 240, 241, .3);
+  
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.btn:active:before {
+  width: 120%;
+  padding-top: 120%;
+  
+  transition: width .2s ease-out, padding-top .2s ease-out;
+}
+/* Styles, not important */ *, *:before, *:after {
+  box-sizing: border-box;
+}
+html {
+  position: relative;
+  height: 100%;
+}
+body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  
+  background-color: #ecf0f1;
+  color: #34495e;
+  font-family: Trebuchet, Arial, sans-serif;
+  text-align: center;
+}
+h2 {
+  font-weight: normal;
+}
+.btn.orange {
+  background-color: #e67e22;
+}
+.btn.orange:hover, .btn.orange:focus {
+  background-color: #d35400;
+}
+.btn.red {
+  background-color: #e74c3c;
+}
+.btn.red:hover, .btn.red:focus {
+  background-color: #c0392b;
+}
+--------- */ .group {
+  position:relative;
+  margin-bottom:45px;
+}
+input {
+  font-size:18px;
+  text-align:center;
+  padding:10px 10px 10px 5px;
+  display:block;
+  background-color: #ecf0f1;
+  color: #34495e;
+  width:300px;
+  border:none;
+  border-bottom:1px solid #757575;
+}
+input:focus { outline:none; } /* LABEL 
+======================================= */ label {
+  color: #999;
+  font-size:18px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  margin-bottom:10px;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+/* BOTTOM BARS ================================= */ .bar { 
+position:relative; display:block; width:300px; } .bar:before, 
+.bar:after {
+  content:'';
+  height:2px;
+  width:0;
+  bottom:1px;
+  position:absolute;
+  background:#5264AE;
+  transition:0.2s ease all;
+  -moz-transition:0.2s ease all;
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%;
+}
+/* active state */ input:focus ~ .bar:before, input:focus ~ .bar:after 
+{
+  width:50%;
+}
+</style> </head> <body> <h1>SURBot - Dashboard</h1>
+<h2>Disconnect from SURBot</h2><button class="btn red" 
+onclick="disconnect()"><span>DISCONNECT</span></button>
+<h2>Video Stream</h2>
+<video height="300" width="300" src="http://raspberrypi:8080"></video> 
+<h2>Controls</h2> <button class="btn" 
+onclick="forward()"><span>FORWARD</span></button> <button class="btn" 
+onclick="left()"><span>LEFT</span></button> <button class="btn" 
+onclick="right()"><span>RIGHT</span></button> <button class="btn" 
+onclick="backward()"><span>BACKWARD</span></button> 
+<button class="btn orange" onclick="say()"><span>SPEECH SYNTHESIS</span></button>
+<form> <div class="group">
+      <input type="text" id="arg" value="1" required>
+      <span class="highlight"></span>
+      <span class="bar"></span>
+      <label>Enter Arguments (Time/Speech)</label>
+ </div>
+ </form> <script> function forward() { var arg = 
+document.getElementById("arg").value; var url = 
+"surbot.php?GO=forward&ARG="+encodeURIComponent(arg); 
+window.location.href = url;
+}
+function backward() { var arg = document.getElementById("arg").value; 
+var url = "surbot.php?GO=backward&ARG="+encodeURIComponent(arg); 
+window.location.href = url;
+}
+function disconnect() { window.location.href = "index.html";
+}
+function left() { window.location.href = "surbot.php?GO=left";
+}
+function right() { window.location.href = "surbot.php?GO=right";
+}
+function say(){var arg = document.getElementById("arg").value;
+var url = "surbot.php?GO=say&ARG="+encodeURIComponent(arg);
+window.location.href = url;
+}
+</script> </body> </html>
